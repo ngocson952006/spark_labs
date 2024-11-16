@@ -25,7 +25,7 @@ def ingest_csv_data_into_database(csv_file_path):
     """
     spark_session = (SparkSession.builder.appName("SimpleCSVReaderExample")
                      .config("spark.jars", jdbc_dataset_driver_file_path)
-                     .master("local[*]")
+                     .master("spark://MacBook-Air-cua-Ngoc-2.local:7077")
                      .getOrCreate())
     try:
         print("--------------- Start ingestion ---------------")

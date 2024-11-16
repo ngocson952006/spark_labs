@@ -20,7 +20,9 @@ def duplicated_df(df, times):
 def experiment(file_path):
     print("--- Start experiment ---")
     t0 = int(round(time.time() * 1000))
-    spark_session = SparkSession.builder.appName("SparkLaziness").master("local[*]").getOrCreate()
+    spark_session = (SparkSession.builder.appName("SparkLaziness")
+                     .master("spark://14.225.254.77:7077")
+                     .getOrCreate())
     t1 = int(round(time.time() * 1000))
 
     print(f"Create spark session took {t1 - t0} ms")
