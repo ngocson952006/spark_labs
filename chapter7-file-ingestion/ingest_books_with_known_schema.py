@@ -2,7 +2,7 @@ import os
 import logging
 
 from pyspark.sql import SparkSession
-from pyspark.sql import functions as F
+from pyspark.sql.types import StructType, StructField, IntegerType, DateType, StringType
 
 file_name = "../csv_files/chapter7_books.csv"
 current_dir = os.path.dirname(__file__)
@@ -20,6 +20,13 @@ def ingest_books():
                      .getOrCreate())
 
     logger.info("Start reading CSV file. Using Spark version: {}".format(spark_session.version))
+    # Creates the schema
+    schema = StructType([StructField('id', IntegerType(), False),
+                         StructField('authorId', IntegerType(), True),
+                         StructField('bookTitle', IntegerType(), False),
+                         StructField('releaseDate', DateType(), True),
+                         StructField('url', StringType(), False)])
+
     df = (spark_session.read.format("csv")
           .option("header", "true")
           .option("multiline", True)
@@ -30,8 +37,8 @@ def ingest_books():
           .load(file_path))
     logging.info("Show the file schema information")
     df.printSchema()
-    logger.info("Show 5 first rows")
-    df.show(5)
+    logger.info("Show 10 first rows")
+    df.show(10)
 
     logger.info("End Chapter 7 - Ingest CSV file with options")
 
