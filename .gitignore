@@ -1,4 +1,6 @@
 libs/
 csv_files/
+json_files/
+output_files/
 .idea/
 venv/
