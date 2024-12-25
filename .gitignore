@@ -2,5 +2,7 @@ libs/
 csv_files/
 json_files/
 output_files/
+datasources/
 .idea/
 venv/
+airflow/logs/
