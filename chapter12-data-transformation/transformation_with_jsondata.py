@@ -34,3 +34,4 @@ invoice_by_account = invoice_by_account \
 invoice_by_account.show(10, False)
 
 invoice_by_account.createOrReplaceTempView("invoice_by_account")
+spark.stop()
