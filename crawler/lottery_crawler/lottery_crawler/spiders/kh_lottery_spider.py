@@ -4,15 +4,35 @@ import scrapy
 
 
 class KHLotterySpider(scrapy.Spider):
+    """
+    Represents a Scrapy spider for scraping lottery results for a specific province in Cambodia. The spider iterates through
+    all dates in a specified year and scrapes lottery result information from a predefined website.
+
+    This spider extracts prize titles, results, and order from the HTML table structure of the website. It yields the results
+    as structured dictionaries for further processing.
+
+    :ivar name: Name of the Scrapy spider.
+    :type name: str
+    :ivar DATE_DETECT_PREFIX: Prefix used in URLs to detect the date information.
+    :type DATE_DETECT_PREFIX: str
+    :ivar PROVINCE_CODE: Code representing the province for which the lottery results are being scraped.
+    :type PROVINCE_CODE: str
+    :ivar year: Year for which the spider scrapes lottery data.
+    :type year: int
+    """
     name = "kh_lottery_spider"
 
     DATE_DETECT_PREFIX = 'ngay-'
     PROVINCE_CODE = 'KH79'
 
+    def __init__(self, year=None, *args, **kwargs):
+        super(KHLotterySpider, self).__init__(*args, **kwargs)
+        self.year = int(year)
+
     def start_requests(self):
         base_url = "https://xskt.com.vn/xskh/ngay-{day}-{month}-{year}"
-        start_date = date(2023, 1, 1)  # Start of 2024
-        end_date = date(2023, 12, 31)  # End of 2024
+        start_date = date(self.year, 1, 1)  # Start of 2024
+        end_date = date(self.year, 12, 31)  # End of 2024
         delta = timedelta(days=1)  # To iterate over each day
 
         current_date = start_date
@@ -27,6 +47,19 @@ class KHLotterySpider(scrapy.Spider):
             current_date += delta  # Move to the next day
 
     def parse(self, response):
+        """
+        Parses the response to extract prize information from an HTML table.
+
+        This method processes the HTML response to extract prize details such as prize
+        title, results, and order for a specific date and province. If the expected
+        table rows are not found in the response, the processing is skipped for that
+        date.
+
+        :param response: A scrapy.http.Response object containing the HTML response to parse.
+        :type response: scrapy.http.Response
+        :return: A generator yielding dictionaries representing the parsed prize data.
+        :rtype: generator
+        """
         url = response.request.url
         date_part = url.split('/')[-1].replace(self.DATE_DETECT_PREFIX, '')
         date_object = datetime.strptime(date_part, "%d-%m-%Y").date()
