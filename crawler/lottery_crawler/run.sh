@@ -1,0 +1,1 @@
+scrapy crawl kh_lottery_spider -o kh79_2023.csv
